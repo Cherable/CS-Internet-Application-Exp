@@ -1,0 +1,20 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}青禾校园商店{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'shop/style.css' %}">
+</head>
+<body>
+<header class="header"><a class="brand" href="{% url 'catalog' %}"><span class="logo">禾</span> 青禾 <small>CAMPUS STORE</small></a>
+<nav aria-label="主导航"><a href="{% url 'catalog' %}">发现好物</a><a href="{% url 'cart' %}">购物车</a>
+{% if user.is_authenticated %}<span class="username">{{ user.username }}</span><form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button">注销</button></form>
+{% else %}<a href="{% url 'login' %}">登录</a><a class="nav-register" href="{% url 'register' %}">注册</a>{% endif %}</nav></header>
+<main>
+{% for message in messages %}<div role="status" class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+{% block content %}{% endblock %}
+</main>
+<footer><span>青禾校园商店</span><span>为校园日常，挑选刚刚好的物品。</span><small>课程实验 · 第一阶段演示</small></footer>
+</body></html>

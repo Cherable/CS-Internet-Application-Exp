@@ -1,0 +1,57 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+Found 20 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, sessions, shop
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+test_add_merges_cart_and_keeps_decimal_total (shop.tests.ShopTests.test_add_merges_cart_and_keeps_decimal_total) ... ok
+test_anonymous_cart_requires_login (shop.tests.ShopTests.test_anonymous_cart_requires_login) ... ok
+test_bad_category_does_not_raise_server_error (shop.tests.ShopTests.test_bad_category_does_not_raise_server_error) ... ok
+test_cart_mutations_require_post_and_csrf (shop.tests.ShopTests.test_cart_mutations_require_post_and_csrf) ... ok
+test_catalog_search_category_and_hidden_products (shop.tests.ShopTests.test_catalog_search_category_and_hidden_products) ... ok
+test_customer_cannot_access_admin (shop.tests.ShopTests.test_customer_cannot_access_admin) ... ok
+test_database_constraints (shop.tests.ShopTests.test_database_constraints) ... ok
+test_duplicate_username_and_bad_email_rejected (shop.tests.ShopTests.test_duplicate_username_and_bad_email_rejected) ... ok
+test_html_escaped (shop.tests.ShopTests.test_html_escaped) ... ok
+test_invalid_and_overstock_quantities_rejected (shop.tests.ShopTests.test_invalid_and_overstock_quantities_rejected) ... ok
+test_login_failure_and_success (shop.tests.ShopTests.test_login_failure_and_success) ... ok
+test_login_rejects_external_redirect (shop.tests.ShopTests.test_login_rejects_external_redirect) ... ok
+test_logout_requires_post (shop.tests.ShopTests.test_logout_requires_post) ... ok
+test_other_users_cannot_read_modify_or_delete_cart (shop.tests.ShopTests.test_other_users_cannot_read_modify_or_delete_cart) ... ok
+test_out_of_stock_and_hidden_add_rejected (shop.tests.ShopTests.test_out_of_stock_and_hidden_add_rejected) ... ok
+test_owner_update_and_delete (shop.tests.ShopTests.test_owner_update_and_delete) ... ok
+test_pagination_and_out_of_range_page (shop.tests.ShopTests.test_pagination_and_out_of_range_page) ... ok
+test_registration_hashes_password_and_logs_in (shop.tests.ShopTests.test_registration_hashes_password_and_logs_in) ... ok
+test_update_rejects_stock_reduction_and_inactive_product (shop.tests.ShopTests.test_update_rejects_stock_reduction_and_inactive_product) ... ok
+test_weak_password_rejected (shop.tests.ShopTests.test_weak_password_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 2.567s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+  Applying shop.0001_initial... OK
+System check identified no issues (0 silenced).

@@ -1,0 +1,12 @@
+Execution date (Asia/Shanghai): 2026-10-25
+Browser: Microsoft Edge (headless, Playwright)
+Source: scripts/capture-stage1.cjs
+Base URL: http://127.0.0.1:8000
+Desktop viewport: 1440 x 1000
+Mobile viewport: 390 x 844
+Result: PASS
+Observed output:
+Browser smoke passed: register, search, detail, add/update/remove cart, logout, login, mobile. 7 screenshots saved.
+
+Screenshots are local preview evidence, not cloud deployment evidence.
+No MySQL server or remote GitHub CI was executed in this stage.
