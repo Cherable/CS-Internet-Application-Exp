@@ -2,9 +2,9 @@
 
 用户于 2026-10-25 要求立即执行第一次，并要求每次按工期生成独立文档。
 
-## 下次继续项目的首要待办（PENDING）
+## 下次继续项目的首要待办（DONE）
 
-用户于 2026-10-27 要求：下次登录 Codex 时将 orangible 橙色主题等最新改动上传 GitHub。已记录到根目录 `AGENTS.md`，下次本项目代理被消息或已启用任务唤起时，先上传到 `Cherable/CS-Internet-Application-Exp` 的 main；用户的新要求允许在第二阶段整体完成前先上传此次界面及文档修改。本次只保存待办，未上传。登录事件本身不是当前可用的自动触发器。
+2026-10-28 已将 orangible 橙色主题、7 张新截图、品牌调整说明及 ECS 试用建议上传到 `Cherable/CS-Internet-Application-Exp` 的 main。提交：https://github.com/Cherable/CS-Internet-Application-Exp/commit/4f0c53957e593eb2eedbcaca57f2ab5ce4a61b13 。此一次性待办已完成，不重复上传；第二阶段订单、支付等业务仍需继续开发。
 
 ## 第一阶段：2026-10-25
 

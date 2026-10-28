@@ -1,5 +1,13 @@
 # GitHub 上传记录
 
+## 2026-10-28 orangible 更新成功
+
+已通过 Windows 现有本地代理完成 Git 推送，main 从 `11a4c5a` 更新到 `4f0c539`。
+
+提交地址：https://github.com/Cherable/CS-Internet-Application-Exp/commit/4f0c53957e593eb2eedbcaca57f2ab5ce4a61b13
+
+内容包括 orangible 名称、橙色主题、页面与后台品牌文字、7 张新截图及最新说明。先前的连接/审批失败记录仅为历史过程，不代表当前仍未上传。
+
 ## 2026-10-28 orangible 更新尝试（未完成）
 
 已读取远端 main，仍为 `11a4c5aa696202eedd425ede6cc3fc231ec8b571`，未发现用户新增的远端提交。比对后有 24 个变更文件，包括 7 张新截图；第一阶段报告与旧截图没有变化。Django 系统检查通过，已有橙色主题浏览器回归记录通过。
