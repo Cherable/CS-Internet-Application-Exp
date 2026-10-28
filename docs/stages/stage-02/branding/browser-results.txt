@@ -1,0 +1,1 @@
+orangible orange theme and browser smoke passed: register, search, detail, add/update/remove cart, logout, login, mobile. 7 screenshots saved.

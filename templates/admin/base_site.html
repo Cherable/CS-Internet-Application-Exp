@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }} | orangible 管理{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'admin:index' %}">orangible · 销售管理</a></div>{% endblock %}
+{% block extrastyle %}{{ block.super }}
+<style>
+html[data-theme="light"], :root {
+  --primary: #a83c0d;
+  --secondary: #b84512;
+  --accent: #ffe3bd;
+  --header-color: #fff5e9;
+  --header-bg: #b84512;
+  --header-link-color: #fff;
+  --breadcrumbs-bg: #884022;
+  --link-fg: #a83c0d;
+  --link-selected-fg: #77300d;
+  --button-bg: #b84512;
+  --button-hover-bg: #8b320b;
+  --default-button-bg: #973708;
+  --default-button-hover-bg: #722a08;
+  --selected-bg: #fff0dd;
+  --selected-row: #fff4e7;
+}
+</style>
+{% endblock %}

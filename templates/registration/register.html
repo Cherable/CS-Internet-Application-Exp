@@ -1,3 +1,3 @@
 {% extends 'base.html' %}
-{% block title %}注册 · 青禾{% endblock %}
-{% block content %}<section class="auth-card"><p class="eyebrow">A FRESH START</p><h1>开启青禾日常</h1><p class="muted">创建账户，收藏生活里的小小期待。</p><form method="post">{% csrf_token %}{{ form.as_p }}<button>创建账户</button></form><p>已有账户？<a href="{% url 'login' %}">去登录</a></p></section>{% endblock %}
+{% block title %}注册 · orangible{% endblock %}
+{% block content %}<section class="auth-card"><p class="eyebrow">A FRESH START</p><h1>开启 orangible 日常</h1><p class="muted">创建账户，收藏生活里的小小期待。</p><form method="post">{% csrf_token %}{{ form.as_p }}<button>创建账户</button></form><p>已有账户？<a href="{% url 'login' %}">去登录</a></p></section>{% endblock %}

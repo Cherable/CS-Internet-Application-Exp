@@ -18,7 +18,7 @@ def register(request):
     if request.method == "POST" and form.is_valid():
         user = form.save()
         login(request, user)
-        messages.success(request, "注册成功，欢迎来到青禾校园商店。")
+        messages.success(request, "注册成功，欢迎来到 orangible。")
         return redirect("catalog")
     return render(request, "registration/register.html", {"form": form})
 

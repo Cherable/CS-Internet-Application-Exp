@@ -1,6 +1,7 @@
 """Emit an allowlisted upload manifest; never include local credentials/data."""
 import base64
 import json
+import hashlib
 from pathlib import Path
 
 root = Path(__file__).resolve().parent.parent
@@ -10,6 +11,9 @@ for folder in ("config", "shop", "templates", "static", "scripts", "docs", ".git
 manifest = []
 for file in sorted(files):
     binary = file.suffix == ".png"
+    content = "" if binary else file.read_text(encoding="utf-8-sig")
+    data = file.read_bytes() if binary else content.encode("utf-8")
+    sha = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
     manifest.append({"path": file.relative_to(root).as_posix(), "binary": binary,
-                     "content": "" if binary else file.read_text(encoding="utf-8-sig")})
+                     "content": content, "sha": sha})
 print(json.dumps(manifest, ensure_ascii=True))

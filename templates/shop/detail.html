@@ -1,4 +1,4 @@
 {% extends 'base.html' %}
-{% block title %}{{ product.name }} · 青禾{% endblock %}
+{% block title %}{{ product.name }} · orangible{% endblock %}
 {% block content %}<a class="back" href="{% url 'catalog' %}">← 返回商品列表</a><section class="detail"><div class="product-art large"><span>{{ product.name|slice:':1' }}</span><small>{{ product.category.name }}</small></div><div><p class="eyebrow">{{ product.category.name }}</p><h1>{{ product.name }}</h1><p>{{ product.description }}</p><p class="price">¥ {{ product.price }}</p><p>可用库存：{{ product.stock }}</p>
 {% if product.stock > 0 %}<form class="buy-form" method="post" action="{% url 'add_to_cart' product.pk %}">{% csrf_token %}<label for="quantity">数量</label><input id="quantity" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" required><button>加入购物车</button></form>{% else %}<p class="message">暂时售罄</p>{% endif %}<p class="muted">加入购物车不锁定库存。结算功能将在第二阶段交付。</p></div></section>{% endblock %}

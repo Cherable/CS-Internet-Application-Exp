@@ -1,8 +1,8 @@
 from django.contrib import admin
 from .models import Category, Product
 
-admin.site.site_header = "青禾校园商店 · 销售管理"
-admin.site.site_title = "青禾管理"
+admin.site.site_header = "orangible · 销售管理"
+admin.site.site_title = "orangible 管理"
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
