@@ -1,17 +1,17 @@
 # orangible · 在线购物网站课程实验
 
-2026-10-27 品牌更新：网站名称统一为 **orangible**，页面采用橙色与奶油白配色。此次界面调整将在第二阶段一并上传；第一阶段文档与截图保留当时的实际效果。
+2026-10-27 品牌更新：网站名称统一为 **orangible**，页面采用橙色与奶油白配色，已于 2026-10-28 上传。第二阶段继续沿用；第一阶段文档与截图保留当时的实际效果。
 
-使用 Django + MySQL 实现校园用品购物网站。当前版本完成第一阶段：注册、登录、注销、商品列表、关键词查询、分类筛选、详情页和购物车；商品分类及商品增删改查可通过 Django Admin 操作。
+使用 Django + MySQL 实现校园用品购物网站。当前完成第二阶段：顾客认证、商品浏览查询、购物车、事务化下单和库存预留、演示付款、订单历史与取消、后台商品维护、发货通知队列和销售统计。网站名称为 orangible，采用橙色主题。
 
-> 当前尚未实现订单、付款、发货邮件和销售报表，结算按钮明确禁用。第二阶段完成业务闭环，第三阶段交付阿里云部署与最终报告。代码仓库：[Cherable/CS-Internet-Application-Exp](https://github.com/Cherable/CS-Internet-Application-Exp)，当前尚无线上网站地址。
+> 付款为明确标注的本地演示，未接入支付平台沙箱、未真实收款。邮件默认 console 预览，未真实投递。第三阶段交付阿里云部署与最终报告。代码仓库：[Cherable/CS-Internet-Application-Exp](https://github.com/Cherable/CS-Internet-Application-Exp)，当前尚无线上网站地址。
 
 仓库原有 Java/Vue 框架说明保存在 `docs/repository-original/README.md`，原有 `compose.yaml` 保留。本次交付的可运行应用使用下面的 Django 启动步骤；原有框架说明不能代替本应用的运行说明。
 
 ## 分阶段交付
 
 - [第一阶段：需求、设计、基础代码、测试与截图](docs/stages/stage-01/第一阶段交付文档.md)，实际执行日期 2026-10-25。
-- 第二阶段独立文件：`docs/stages/stage-02/第二阶段交付文档.md`，后续执行时生成。
+- [第二阶段：订单、演示付款、邮件、销售管理与验证](docs/stages/stage-02/第二阶段交付文档.md)，实际执行日期 2026-10-29。
 - 第三阶段独立文件：`docs/stages/stage-03/第三阶段交付文档.md`，后续执行时生成。
 - [进度及后续执行约定](docs/PROGRESS.md)。不以覆盖第一阶段文档的方式交付后续成果。
 
@@ -73,7 +73,17 @@ GRANT ALL PRIVILEGES ON campus_shop.* TO 'campus_shop'@'localhost';
 .\.venv\Scripts\python.exe manage.py test --verbosity 2
 ```
 
-本次 20 项 Django 测试在 SQLite 上通过。MySQL CI 工作流已提供，但本机没有 MySQL 服务，也没有远端 GitHub Actions 执行结果，因此尚不能声称 MySQL 已实测通过。MySQL 测试需要能创建 `test_campus_shop` 的专用测试账户，生产应用账户不应具有这一权限。
+第二阶段 SQLite 测试共 39 项：36 项通过，3 项 MySQL 并发用例跳过；独立本地 MySQL 8.0.45 上 39 项全部通过，含最后一件库存竞争、重复令牌并发下单和付款/取消竞争。日志保存在 `docs/stages/stage-02/`。部署目标 MySQL 8.4 尚未本地验证；未据此声称最新远端 CI 已通过。MySQL 测试需要能创建 `test_campus_shop` 的专用测试账户，生产应用账户不应具有这一权限。
+
+可选独立 MySQL 测试：`python scripts/test-mysql-local.py --mysqld <mysqld路径>`，脚本临时启动独立实例，随机密码，测试后关闭清理。第二阶段浏览器验收：`node scripts/capture-stage2.cjs`，需要 playwright 和 Edge；自动使用独立 SQLite 库，不修改个人演示库。
+
+## 第二阶段业务操作
+
+顾客在购物车点击“去结算”，填写收件信息后下单，库存立即预留。在订单详情进行演示付款，或取消待付款订单释放库存；“我的订单”查看历史和状态。未付款订单暂不自动过期，演示后请及时取消。
+
+管理员通过 `/admin/` 维护商品，通过 `/sales/` 查看统计和发货。销售页面要求 staff 和 `shop.view_order` 权限，发货另需 `shop.change_order`。被历史订单引用的商品采用下架方式保留记录。
+
+发货后执行 `python manage.py send_shipment_emails` 处理通知队列，失败任务可重试。`.env.example` 提供 SMTP 配置项；默认仅终端预览，SMTP 接受也不能等同收件箱投递。`DEMO_PAYMENT_ENABLED=false` 关闭演示付款，生产默认关闭；请在部署时明确检查该开关。详情和 9 张截图见第二阶段独立报告。
 
 可选浏览器回归：安装 Node.js、`npm install --no-save --package-lock=false playwright` 和 Microsoft Edge，在开发服务器启动后运行 `node scripts/capture-stage1.cjs`。脚本会创建一个随机演示用户、操作购物车、保存 7 张本地截图；不生成管理员或固定密码。
 

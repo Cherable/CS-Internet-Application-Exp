@@ -1,4 +1,5 @@
 from decimal import Decimal
+import uuid
 
 from django.conf import settings
 from django.core.validators import MinValueValidator
@@ -52,3 +53,67 @@ class CartItem(models.Model):
     @property
     def subtotal(self):
         return self.product.price * self.quantity
+
+
+class Order(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "待付款"
+        PAID = "paid", "已付款（演示）"
+        SHIPPED = "shipped", "已发货"
+        CANCELLED = "cancelled", "已取消"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    checkout_token = models.UUIDField(unique=True, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    recipient = models.CharField("收件人", max_length=80)
+    email = models.EmailField("发货通知邮箱")
+    address = models.CharField("收货地址", max_length=300)
+    total = models.DecimalField("订单金额", max_digits=14, decimal_places=2)
+    status = models.CharField("状态", max_length=12, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    shipped_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "订单"
+        verbose_name_plural = verbose_name
+        constraints = [
+            models.CheckConstraint(condition=models.Q(total__gt=0), name="order_total_positive"),
+            models.CheckConstraint(condition=models.Q(status__in=["pending", "paid", "shipped", "cancelled"]), name="order_status_valid"),
+        ]
+
+    def __str__(self):
+        return str(self.pk)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    name = models.CharField(max_length=120)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=models.Q(quantity__gt=0), name="order_item_quantity_positive"),
+            models.CheckConstraint(condition=models.Q(price__gt=0), name="order_item_price_positive"),
+        ]
+
+    @property
+    def subtotal(self):
+        return self.price * self.quantity
+
+
+class ShipmentEmail(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "待处理"
+        PREVIEW = "preview", "本地预览，未投递"
+        ACCEPTED = "accepted", "SMTP 已接受，未确认收件"
+        FAILED = "failed", "失败，可重试"
+
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="shipment_email")
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.PENDING)
+    attempts = models.PositiveIntegerField(default=0)
+    last_error = models.CharField(max_length=160, blank=True)
+    processed_at = models.DateTimeField(null=True, blank=True)

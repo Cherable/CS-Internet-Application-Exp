@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}我的订单 · orangible{% endblock %}
+{% block content %}<p class="eyebrow">YOUR ORANGIBLE STORY</p><h1>我的订单</h1>
+{% for order in page %}<article class="cart-row"><div><a href="{% url 'order_detail' order.pk %}"><strong>{{ order.pk }}</strong></a><p>{{ order.created_at|date:'Y-m-d H:i' }}</p></div><div><strong>￥{{ order.total }}</strong><p>{{ order.get_status_display }}</p></div></article>{% empty %}<div class="empty">暂无订单，去挑选喜欢的好物吧。</div>{% endfor %}
+<nav class="pagination">{% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">上一页</a>{% endif %} {{ page.number }} / {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?page={{ page.next_page_number }}">下一页</a>{% endif %}</nav>{% endblock %}

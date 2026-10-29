@@ -43,7 +43,7 @@ if engine == "mysql":
 elif engine == "sqlite":
     if not DEBUG:
         raise ImproperlyConfigured("SQLite is for local preview only; use MySQL in production.")
-    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}}
+    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.getenv("SQLITE_PATH", str(BASE_DIR / "db.sqlite3"))}}
 else:
     raise ImproperlyConfigured("DB_ENGINE must be sqlite or mysql.")
 AUTH_PASSWORD_VALIDATORS = [
@@ -68,3 +68,15 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
+
+# No platform credentials: explicitly opt in to a demonstration, never real money.
+DEMO_PAYMENT_ENABLED = os.getenv("DEMO_PAYMENT_ENABLED", "true" if DEBUG else "false").lower() == "true"
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() == "true"
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() == "true"
+EMAIL_TIMEOUT = 15
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "orangible@example.invalid")

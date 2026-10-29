@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}确认订单 · orangible{% endblock %}
+{% block content %}<p class="eyebrow">ONE MORE STEP</p><h1>确认订单</h1>
+<section class="cart-layout"><div class="panel"><p>下单后预留库存；未付款可在订单详情取消并释放库存。</p>
+<form method="post" class="checkout-form">{% csrf_token %}{{ form.as_p }}<button>提交订单</button></form></div>
+<aside class="summary"><h2>本次好物</h2>{% for item in items %}<p>{{ item.product.name }} × {{ item.quantity }} <strong>￥{{ item.subtotal }}</strong></p>{% empty %}<p>购物车为空。</p>{% endfor %}<hr><p class="price">￥{{ total }}</p><p class="muted">以提交时的库存与价格为准。付款为课程演示，不真实扣款。</p></aside></section>{% endblock %}

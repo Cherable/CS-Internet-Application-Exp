@@ -1,0 +1,2 @@
+PASS: actual local browser checkout -> demo payment -> staff sales -> shipping -> console email preview -> order history; admin product create/update/delete; mobile 390px no horizontal overflow; no page errors.
+9 screenshots saved. Isolated SQLite browser database; MySQL concurrency tested separately. No real payment or email delivery.

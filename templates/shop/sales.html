@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}销售管理 · orangible{% endblock %}
+{% block content %}<p class="eyebrow">ORANGIBLE SALES DESK</p><h1>销售管理</h1><p><a href="{% url 'admin:shop_product_changelist' %}">管理商品目录</a> · <a href="{% url 'admin:shop_order_changelist' %}">后台订单与邮件队列</a></p>
+<div class="sales-stats"><section class="summary"><h2>演示销售额</h2><p class="price">￥{{ stats.revenue|default:'0.00'|floatformat:2 }}</p></section><section class="summary"><h2>已付款及已发货订单</h2><p class="price">{{ stats.count }}</p></section></div>
+<p class="muted">统计全部历史已付款及已发货订单；排除待付款和已取消订单。金额为课程演示数据，未真实收款。商品改名后按订单名称快照分别统计。</p>
+<h2>商品销售统计</h2><div class="table-scroll"><table><thead><tr><th>商品</th><th>数量</th><th>演示销售额</th></tr></thead><tbody>{% for item in products %}<tr><td>{{ item.name }}</td><td>{{ item.units }}</td><td>￥{{ item.revenue|floatformat:2 }}</td></tr>{% empty %}<tr><td colspan="3">暂无销售数据</td></tr>{% endfor %}</tbody></table></div>
+<h2>订单管理</h2>{% for order in orders %}<article class="cart-row"><div><strong class="order-number">{{ order.pk }}</strong><p>{{ order.user.username }} · {{ order.recipient }} · ￥{{ order.total }}</p><p>{{ order.get_status_display }}</p></div>{% if order.status == 'paid' and perms.shop.change_order %}<form method="post" action="{% url 'ship_order' order.pk %}">{% csrf_token %}<button>确认发货</button></form>{% endif %}</article>{% empty %}<p>暂无订单</p>{% endfor %}
+<nav class="pagination">{% if orders.has_previous %}<a href="?page={{ orders.previous_page_number }}">上一页</a>{% endif %} {{ orders.number }} / {{ orders.paginator.num_pages }} {% if orders.has_next %}<a href="?page={{ orders.next_page_number }}">下一页</a>{% endif %}</nav>{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}订单详情 · orangible{% endblock %}
+{% block content %}<p class="eyebrow">THANK YOU FOR YOUR PICK</p><h1>订单详情</h1><p class="order-number">{{ order.pk }}</p>
+<section class="cart-layout"><div><div class="panel"><h2>{{ order.get_status_display }}</h2><p>{{ order.recipient }} · {{ order.email }}</p><p>{{ order.address }}</p><p class="muted">创建：{{ order.created_at|date:'Y-m-d H:i' }}{% if order.paid_at %} · 演示付款：{{ order.paid_at|date:'Y-m-d H:i' }}{% endif %}{% if order.shipped_at %} · 发货：{{ order.shipped_at|date:'Y-m-d H:i' }}{% endif %}</p></div>
+{% for item in order.items.all %}<article class="cart-row"><div><h3>{{ item.name }}</h3><p>￥{{ item.price }} × {{ item.quantity }}</p></div><strong>￥{{ item.subtotal }}</strong></article>{% endfor %}</div>
+<aside class="summary"><h2>订单金额</h2><p class="price">￥{{ order.total }}</p><p>演示支付 · 未接入支付平台，不真实扣款</p>
+{% if order.status == 'pending' %}{% if demo_enabled %}<form method="post" action="{% url 'pay_order' order.pk %}">{% csrf_token %}<button>确认演示付款（不扣款）</button></form>{% else %}<p>演示支付已关闭。</p>{% endif %}<form method="post" action="{% url 'cancel_order' order.pk %}">{% csrf_token %}<button class="text-button">取消订单并释放库存</button></form>{% endif %}
+{% if order.status == 'shipped' %}<p>发货通知：{{ order.shipment_email.get_status_display|default:'待处理' }}</p>{% endif %}<a href="{% url 'orders' %}">返回我的订单</a></aside></section>{% endblock %}
