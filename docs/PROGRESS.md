@@ -20,7 +20,7 @@
 
 未配置平台沙箱凭据，付款只为本地演示，未真实收款。邮件 console 为本地预览，SMTP 成功分支仅 mock 测试，未真实投递。MySQL 8.4 及远端 CI 本轮尚未确认。未部署阿里云。原始 ex.html 本轮未找到，沿用第一阶段提取的额外考核要求，不虚构重新读取。
 
-GitHub 同步：已绕过失效代理直接读取远端，核实 main 为 ae9c7df，正在按原历史提交本阶段文件。成功与提交地址以 docs/GITHUB_UPLOAD.md 的后续记录为准。
+GitHub 同步：2026-10-29 已推送并通过 ls-remote 核实 main 指向第二阶段代码提交：https://github.com/Cherable/CS-Internet-Application-Exp/commit/35a25e2e796f93f1a9cc9bd9d03fd2e2e662fc60 。本轮 9 张截图和独立报告均在该提交中。第一阶段目录 Git 树哈希与上传前完全一致，未上传环境密钥、数据库或运行缓存。上传记录见 docs/GITHUB_UPLOAD.md。
 
 ## 第三阶段：2026-11-01 待执行
 

@@ -27,3 +27,15 @@ GitHub 连接首次上传出现传输错误，后续操作自动权限审批超�
 仓库原有 README 与 LICENSE 保存到 `docs/repository-original/`；原有 `compose.yaml` 保留。根目录 README 更新为实际 Django 应用说明。保留已有提交历史，不强制覆盖分支。
 
 第一阶段文档是交付当时的独立记录，里面的“尚未发布 GitHub”反映当时状态；本记录与根目录 README 提供最新仓库信息。上传完成不表示阿里云已经部署，也不表示 GitHub CI 已通过。
+
+
+## 2026-10-29 第二阶段上传成功
+
+- 既有仓库 `Cherable/CS-Internet-Application-Exp`，保留原 main 历史，无强制推送、无新仓库。
+- 代码与证据提交：https://github.com/Cherable/CS-Internet-Application-Exp/commit/35a25e2e796f93f1a9cc9bd9d03fd2e2e662fc60
+- 37 个变更文件：事务订单/库存、演示支付、订单与销售管理、发货邮件队列、独立报告及 9 张真实运行截图。
+- 上传后独立 `git ls-remote origin refs/heads/main` 验证与该提交完全一致；第一阶段目录 Git 树与父提交一致。
+- 未上传 `.env`、虚拟环境、数据库、缓存或 `.runtime/`。独立测试实例已关闭，没有启停系统 MySQL 服务。
+- 验证：MySQL 8.0.45 的 39 项测试全部通过；SQLite 36 项通过、3 项 MySQL 并发用例跳过；浏览器完整流程、后台商品 CRUD、手机无溢出通过，9 张截图已复核代表页面。
+- 无平台沙箱凭据：仅演示付款，未真实收款；console 邮件仅预览，未真实投递。未声称 MySQL 8.4、最新远端 CI 或阿里云线上部署已完成。
+- 网络：原本地代理不可用，清除本次子进程代理后直接 Git HTTPS 成功，未修改系统代理设置。
