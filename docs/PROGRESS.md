@@ -40,3 +40,5 @@ GitHub 同步：2026-10-29 已推送并通过 ls-remote 核实 main 指向第二
 
 
 第三阶段实际交付：Dockerfile、compose.production.yaml、deploy/、生产配置样例、最终报告和部署手册。独立证据为 stages/stage-03/，36 项 SQLite 通过/3 项 MySQL 跳过、9 张真实浏览器截图及操作日志。Docker 本机不可用，MySQL 8.4/云部署/真实邮件/校园网/备份恢复均为待配置验收，不写成成功。原始 ex.html 仍未找到。三阶段本地开发完成，不再自动重复执行；GitHub 同步结果另见上传记录。
+
+第三阶段已上传并核实远端：https://github.com/Cherable/CS-Internet-Application-Exp/commit/ee042b8b9706c8618b18e4b4a07fa5068859899f 。三阶段开发任务结束。
