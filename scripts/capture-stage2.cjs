@@ -1,5 +1,3 @@
-/* Actual local browser acceptance test using an isolated database and random credentials.
-   Requires playwright + Edge. Run: node scripts/capture-stage2.cjs */
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');

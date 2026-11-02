@@ -1,6 +1,3 @@
-/* Optional browser smoke test. Install playwright and Microsoft Edge first.
-   Run the development server, then: node scripts/capture-stage1.cjs
-   Images come from the running application, never a mockup. */
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');
