@@ -127,3 +127,8 @@ requirements.txt         已锁定 Python 依赖
 - [Django MySQL 配置](https://docs.djangoproject.com/en/5.2/ref/databases/#mysql-notes)
 
 原创应用代码采用 MIT 许可证，原始课程材料不包含在该授权范围内。
+
+
+## 第三阶段（2026-11-02）
+
+[最终实验报告](docs/最终实验报告.md)、[阿里云部署手册](docs/ALIYUN_DEPLOYMENT.md)、[第三阶段独立交付](docs/stages/stage-03/第三阶段交付文档.md)。生产使用 compose.production.yaml，不使用历史 compose.yaml。当前只有本地验证，没有上线地址；Docker 构建和公网验收待实际服务器执行。

@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?required}
+      MYSQL_USER: ${MYSQL_USER:?required}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?required}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?required}
+    volumes: ["mysql_data:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD-SHELL", 'MYSQL_PWD="$$MYSQL_PASSWORD" mysqladmin ping -h 127.0.0.1 -u"$$MYSQL_USER" --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      DB_ENGINE: mysql
+      MYSQL_HOST: db
+      DJANGO_DEBUG: "false"
+    depends_on:
+      db: {condition: service_healthy}
+    volumes: ["static_data:/app/staticfiles"]
+  nginx:
+    image: nginx:stable
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    depends_on: [web]
+    volumes:
+      - static_data:/static:ro
+      - ./deploy/nginx/${NGINX_CONFIG:-http.conf}:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/certs:/etc/nginx/certs:ro
+volumes:
+  mysql_data:
+  static_data:

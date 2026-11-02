@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+.runtime
+*.sqlite3
+__pycache__
+dist
+backups
+deploy/certs

@@ -9,3 +9,8 @@ media/
 .runtime/
 *.log
 dist/
+
+.env.production
+backups/
+deploy/certs/
+staticfiles/

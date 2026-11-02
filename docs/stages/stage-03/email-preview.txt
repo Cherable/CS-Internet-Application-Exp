@@ -1,0 +1,19 @@
+Console backend: local preview, NOT real delivery.
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?b3JhbmdpYmxlIOWPkei0p+mAmuefpSDCtyA4ODc3NjRlNy0yODg2LTQxZTctODI2?=
+ =?utf-8?b?MC0wNTY3MGE2YWQ2Y2Q=?=
+From: orangible@example.invalid
+To: buyer@example.com
+Date: Mon, 02 Nov 2026 09:11:17 -0000
+Message-ID: <179361067748.38552.15323530257877115054@Tequlia>
+
+课程演示同学，您好！
+订单 887764e7-2886-41e7-8260-05670a6ad6cd 已标记发货。
+订单金额：￥37.80
+本订单使用演示支付，未真实扣款。
+这是课程实验通知，发货状态由实验管理员维护。
+-------------------------------------------------------------------------------
+outbox 1: preview, attempts=1

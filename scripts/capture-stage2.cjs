@@ -6,7 +6,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { spawn, spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
-const output = path.join(root, 'docs/stages/stage-02');
+const output = path.join(root, process.env.EVIDENCE_DIR || 'docs/stages/stage-02');
 const shots = path.join(output, 'screenshots');
 const runId = crypto.randomBytes(5).toString('hex');
 const py = process.env.PYTHON || path.join(root, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');

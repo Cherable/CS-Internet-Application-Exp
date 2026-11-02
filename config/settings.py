@@ -80,3 +80,9 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "true").lower() == "true"
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() == "true"
 EMAIL_TIMEOUT = 15
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "orangible@example.invalid")
+
+# Trusted reverse proxy: web has no host-published port; nginx overwrites this header.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [x.strip() for x in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if x.strip()]
+SECURE_SSL_REDIRECT = not DEBUG and os.getenv("DJANGO_HTTPS", "false").lower() == "true"
+SECURE_HSTS_SECONDS = 3600 if SECURE_SSL_REDIRECT else 0
