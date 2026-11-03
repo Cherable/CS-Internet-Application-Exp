@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q
+from django.utils import timezone
+from .fruit_market import decorate
 from django.db.models import Sum, Count, F
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -34,20 +36,34 @@ def catalog(request):
     query = request.GET.get("q", "").strip()[:120]
     category = request.GET.get("category", "")
     if query:
-        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(origin__icontains=query) | Q(flavor__icontains=query))
     if category:
         if category.isascii() and category.isdigit() and len(category) < 10:
             products = products.filter(category_id=int(category))
         else:
             products = products.none()
-    page = Paginator(products, 9).get_page(request.GET.get("page"))
+    products = [decorate(p) if p.fruit_key else p for p in products]
+    section = request.GET.get("section", "all")
+    today = timezone.localdate()
+    products = [p for p in products if not p.best_before or p.best_before >= today]
+    if section == "season": products = [p for p in products if getattr(p, "is_season", False)]
+    elif section == "offers": products = [p for p in products if p.sale_kind in ("ready", "clearance")]
+    sort = request.GET.get("sort", "sales")
+    if sort == "price": products.sort(key=lambda p: p.current_price)
+    elif sort == "new": products.sort(key=lambda p: p.created_at, reverse=True)
+    else: products.sort(key=lambda p: (-getattr(p, "month_sales", 0), p.pk))
+    page = Paginator(products, 12).get_page(request.GET.get("page"))
     return render(request, "shop/catalog.html", {
-        "page": page, "categories": Category.objects.all(), "query": query, "selected_category": category,
+        "section": section, "sort": sort, "today": today, "page": page, "categories": Category.objects.all(), "query": query, "selected_category": category,
     })
 
 
 def product_detail(request, pk):
     product = get_object_or_404(Product.objects.select_related("category"), pk=pk, is_active=True)
+    if product.best_before and product.best_before < timezone.localdate():
+        from django.http import Http404
+        raise Http404
+    if product.fruit_key: decorate(product)
     return render(request, "shop/detail.html", {"product": product})
 
 
@@ -72,6 +88,9 @@ def add_to_cart(request, pk):
         get_user_model().objects.select_for_update().get(pk=request.user.pk)
         product = get_object_or_404(Product.objects.select_for_update(), pk=pk, is_active=True)
         item = CartItem.objects.filter(user=request.user, product=product).first()
+        if product.best_before and product.best_before < timezone.localdate():
+            messages.error(request, "该批次已结束销售。")
+            return redirect("catalog")
         quantity = (item.quantity if item else 0) + form.cleaned_data["quantity"]
         if quantity > min(product.stock, 999):
             messages.error(request, "加入失败：超过可用库存或购物车数量上限。")
@@ -204,3 +223,16 @@ def ship_order(request, pk):
     except order_services.OrderError as exc:
         messages.error(request, str(exc))
     return redirect("sales")
+
+
+def fruit_snapshot(request):
+    from django.http import JsonResponse
+    today = timezone.localdate()
+    rows=[]
+    for p in Product.objects.filter(is_active=True).exclude(fruit_key=""):
+        if p.best_before and p.best_before < today: continue
+        decorate(p, today)
+        rows.append({"id":p.pk,"sales":p.month_sales,"price":str(p.today_price),"discount":p.discount_percent})
+    response = JsonResponse({"day":str(today),"products":rows})
+    response["Cache-Control"] = "no-store"
+    return response

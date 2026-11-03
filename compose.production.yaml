@@ -24,6 +24,17 @@ services:
     depends_on:
       db: {condition: service_healthy}
     volumes: ["static_data:/app/staticfiles"]
+  fruit-clock:
+    build: .
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      DB_ENGINE: mysql
+      MYSQL_HOST: db
+      DJANGO_DEBUG: "false"
+    command: ["python", "manage.py", "run_fruit_clock"]
+    depends_on:
+      db: {condition: service_healthy}
   nginx:
     image: nginx:stable
     restart: unless-stopped

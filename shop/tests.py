@@ -72,7 +72,7 @@ class ShopTests(TestCase):
     def test_pagination_and_out_of_range_page(self):
         Product.objects.bulk_create([Product(category=self.category, name=f"商品{i}", price="1.00", stock=1) for i in range(12)])
         response = self.client.get(reverse("catalog"))
-        self.assertEqual(len(response.context["page"]), 9)
+        self.assertEqual(len(response.context["page"]), 12)
         self.assertEqual(self.client.get(reverse("catalog"), {"page": "999"}).context["page"].number, 2)
 
     def test_anonymous_cart_requires_login(self):

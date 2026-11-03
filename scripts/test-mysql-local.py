@@ -21,6 +21,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mysqld", default=shutil.which("mysqld"))
     parser.add_argument("--port", type=int, default=13316)
+    parser.add_argument("--evidence", default="docs/stages/stage-02/mysql-test-results.txt")
     args = parser.parse_args()
     if not args.mysqld:
         parser.error("Provide --mysqld with the installed MySQL server executable")
@@ -72,7 +73,7 @@ def main():
                        DJANGO_DEBUG="true", PYTHONIOENCODING="utf-8")
             result = subprocess.run([sys.executable, "manage.py", "test", "--verbosity", "2", "--noinput"],
                 cwd=root, env=env, capture_output=True, text=True, encoding="utf-8")
-            evidence = root / "docs/stages/stage-02/mysql-test-results.txt"
+            evidence = root / args.evidence
             evidence.parent.mkdir(parents=True, exist_ok=True)
             evidence.write_text(f"Disposable local MySQL {version}; loopback only; no existing service used.\n"
                                 + result.stdout + result.stderr, encoding="utf-8")

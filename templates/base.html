@@ -4,18 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#c34b14">
-  <title>{% block title %}orangible · 校园好物商店{% endblock %}</title>
+  <meta name="theme-color" content="#143c30">
+  <title>{% block title %}orangible · 热带果实图鉴{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'shop/style.css' %}">
 </head>
 <body>
-<header class="header"><a class="brand" href="{% url 'catalog' %}" aria-label="orangible 首页"><span class="logo" aria-hidden="true">o</span> orangible <small>EVERYDAY GOODS</small></a>
-<nav aria-label="主导航"><a href="{% url 'catalog' %}">发现好物</a><a href="{% url 'cart' %}">购物车</a>
+<header class="header"><a class="brand" href="{% url 'catalog' %}" aria-label="orangible 首页"><span class="logo" aria-hidden="true">o</span> orangible <small>TROPICAL FIELD NOTES</small></a>
+<nav aria-label="主导航"><a href="{% url 'catalog' %}">果实图鉴</a><a href="{% url 'catalog' %}?section=season#products">应季</a><a href="{% url 'catalog' %}?section=offers#products">即食优惠</a><a href="{% url 'cart' %}">购物车</a>
 {% if user.is_authenticated %}<a href="{% url 'orders' %}">我的订单</a>{% if user.is_staff and perms.shop.view_order %}<a href="{% url 'sales' %}">销售管理</a>{% endif %}<span class="username">{{ user.username }}</span><form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button">注销</button></form>
 {% else %}<a href="{% url 'login' %}">登录</a><a class="nav-register" href="{% url 'register' %}">注册</a>{% endif %}</nav></header>
 <main>
 {% for message in messages %}<div role="status" class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
 {% block content %}{% endblock %}
 </main>
-<footer><span>orangible</span><span>给校园日常，加一点橙色。</span><small>校园好物 · 日常有光</small></footer>
+<footer><span>orangible</span><span>从雨林边缘，到你的餐桌。</span><small>风土有时 · 果实有味</small></footer>
 </body></html>

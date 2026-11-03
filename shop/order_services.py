@@ -2,6 +2,7 @@
 from decimal import Decimal
 
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import F
@@ -25,12 +26,14 @@ def checkout(user, token, recipient, email, address):
         raise OrderError("购物车为空。")
     products = {p.pk: p for p in Product.objects.select_for_update().filter(
         pk__in=[item.product_id for item in items]).order_by("pk")}
+    prices = {}
     total = Decimal("0.00")
     for item in items:
         product = products[item.product_id]
-        if not product.is_active or product.stock < item.quantity:
+        if not product.is_active or product.stock < item.quantity or (product.best_before and product.best_before < timezone.localdate()):
             raise OrderError(f"{product.name} 已下架或库存不足，请调整购物车。")
-        total += product.price * item.quantity
+        prices[product.pk] = product.current_price
+        total += prices[product.pk] * item.quantity
     order = Order.objects.create(user=user, checkout_token=token, recipient=recipient,
                                  email=email, address=address, total=total)
     for item in items:
@@ -40,7 +43,7 @@ def checkout(user, token, recipient, email, address):
                 stock=F("stock") - item.quantity) != 1:
             raise OrderError("库存发生变化，请重试。")
         OrderItem.objects.create(order=order, product=product, name=product.name,
-                                 price=product.price, quantity=item.quantity)
+                                 price=prices[product.pk], quantity=item.quantity)
     CartItem.objects.filter(pk__in=[item.pk for item in items]).delete()
     return order
 

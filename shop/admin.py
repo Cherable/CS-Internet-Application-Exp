@@ -61,3 +61,14 @@ class ShipmentEmailAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+from .models import FruitDay
+@admin.register(FruitDay)
+class FruitDayAdmin(admin.ModelAdmin):
+    list_display = ["product", "day", "simulated_units", "manual_units", "supply", "discount"]
+    list_editable = ["manual_units"]
+    list_filter = ["day"]
+    readonly_fields = ["product", "day", "simulated_units", "supply", "discount"]
+    def has_add_permission(self, request): return False
+    def has_delete_permission(self, request, obj=None): return False

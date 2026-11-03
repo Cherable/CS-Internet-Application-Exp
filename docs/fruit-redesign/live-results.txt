@@ -1,0 +1,1 @@
+PASS: persisted manual sales update appears in the open browser and moves fruit to first place without reloading; original manual value restored afterward.

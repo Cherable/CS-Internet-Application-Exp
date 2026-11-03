@@ -25,6 +25,24 @@ class Product(models.Model):
     price = models.DecimalField("单价", max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))])
     stock = models.PositiveIntegerField("库存", default=0)
     is_active = models.BooleanField("上架", default=True)
+    fruit_key = models.SlugField(blank=True)
+    image_name = models.CharField(max_length=100, blank=True)
+    origin = models.CharField("产地", max_length=160, blank=True)
+    flavor = models.TextField("风味", blank=True)
+    growing_story = models.TextField("种植与采收", blank=True)
+    season_months = models.JSONField("旺季月份（模拟）", default=list, blank=True)
+    sale_kind = models.CharField("销售类型", max_length=12, default="regular", choices=[("regular", "常规"), ("ready", "即食"), ("clearance", "临期")])
+    best_before = models.DateField("建议食用截止日期", null=True, blank=True)
+
+    @property
+    def current_price(self):
+        if not self.fruit_key:
+            return self.price
+        if hasattr(self, "today_price"):
+            return self.today_price
+        from .fruit_market import quote
+        return quote(self)[0]
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -52,7 +70,7 @@ class CartItem(models.Model):
 
     @property
     def subtotal(self):
-        return self.product.price * self.quantity
+        return self.product.current_price * self.quantity
 
 
 class Order(models.Model):
@@ -117,3 +135,18 @@ class ShipmentEmail(models.Model):
     attempts = models.PositiveIntegerField(default=0)
     last_error = models.CharField(max_length=160, blank=True)
     processed_at = models.DateTimeField(null=True, blank=True)
+
+
+class FruitDay(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="market_days")
+    day = models.DateField()
+    simulated_units = models.PositiveIntegerField(default=0)
+    manual_units = models.PositiveIntegerField("补录销量（不含本站订单）", default=0)
+    supply = models.PositiveIntegerField("模拟供给", default=0)
+    discount = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["product", "day"], name="unique_fruit_day")]
+        ordering = ["-day", "product_id"]
+        verbose_name = "水果每日数据"
+        verbose_name_plural = verbose_name
