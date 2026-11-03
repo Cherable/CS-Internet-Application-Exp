@@ -10,3 +10,7 @@
 - dragon.jpg — Anna Tarazevich — https://www.pexels.com/photo/5620865/
 - coconut.jpg — Карина Нестерчук — https://www.pexels.com/photo/7522111/
 - passion.jpg — Bogdan Krupin — https://www.pexels.com/photo/6332803/
+- coconut-full.jpg — Orsys _tography — https://www.pexels.com/photo/split-coconut-11413403/
+- pineapple-full.jpg — Kaboompics — https://www.pexels.com/photo/fresh-whole-pineapple-on-white-background-4195510/
+
+- pineapple-whole.jpg — Kaboompics — https://www.pexels.com/photo/whole-pineapple-on-white-marble-surface-4195527/

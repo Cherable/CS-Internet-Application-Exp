@@ -64,7 +64,8 @@ def product_detail(request, pk):
         from django.http import Http404
         raise Http404
     if product.fruit_key: decorate(product)
-    return render(request, "shop/detail.html", {"product": product})
+    from .fruit_stories import story_for
+    return render(request, "shop/detail.html", {"product": product, "story": story_for(product)})
 
 
 @login_required

@@ -1,0 +1,59 @@
+[
+  {
+    "width": 1042,
+    "height": 871,
+    "metrics": {
+      "ratio": 1.6666287598794565,
+      "overflow": false,
+      "photoFit": "contain",
+      "closingRight": 1042,
+      "closingLeft": 0,
+      "bg": "linear-gradient(rgba(18, 60, 40, 0.4), rgba(19, 54, 38, 0.333)), url(\"http://127.0.0.1:8000/static/shop/images/rain.jpg\")"
+    },
+    "detail": {
+      "overflow": false,
+      "imgBottom": 347.9375,
+      "infoTop": 347.9375,
+      "buyBottom": 553.53125,
+      "fit": "contain"
+    }
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "metrics": {
+      "ratio": 1.6666522228962648,
+      "overflow": false,
+      "photoFit": "contain",
+      "closingRight": 1440,
+      "closingLeft": 0,
+      "bg": "linear-gradient(rgba(18, 60, 40, 0.4), rgba(19, 54, 38, 0.333)), url(\"http://127.0.0.1:8000/static/shop/images/rain.jpg\")"
+    },
+    "detail": {
+      "overflow": false,
+      "imgBottom": 366.484375,
+      "infoTop": 366.484375,
+      "buyBottom": 572.078125,
+      "fit": "contain"
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "metrics": {
+      "ratio": 1.6666153016411125,
+      "overflow": false,
+      "photoFit": "contain",
+      "closingRight": 390,
+      "closingLeft": 0,
+      "bg": "linear-gradient(rgba(18, 60, 40, 0.4), rgba(19, 54, 38, 0.333)), url(\"http://127.0.0.1:8000/static/shop/images/rain.jpg\")"
+    },
+    "detail": {
+      "overflow": false,
+      "imgBottom": 344.078125,
+      "infoTop": 344.078125,
+      "buyBottom": 735.328125,
+      "fit": "contain"
+    }
+  }
+]

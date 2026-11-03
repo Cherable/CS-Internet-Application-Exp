@@ -4,7 +4,7 @@ const fs=require('node:fs'); const path=require('node:path'); const crypto=requi
 const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));const base='http://127.0.0.1:8000';
 async function shot(name){await page.locator('img').evaluateAll(es=>es.forEach(e=>e.loading='eager'));await page.waitForFunction(()=>[...document.images].every(i=>i.complete&&i.naturalWidth>0));await page.screenshot({path:path.join(out,name+'.png'),fullPage:true});}
 for(let i=0;i<40;i++){try{if((await fetch(base)).ok)break;}catch{}await new Promise(r=>setTimeout(r,250));}
-await page.goto(base);await shot('01-rainforest-home');
+await page.goto(base);if(await page.locator('#rainforest-intro[open]').count()){await page.getByRole('button',{name:'探索当季果实'}).click();}await shot('01-rainforest-home');
 const snapshot=await (await page.request.get(base+'/fruit-market/')).json();if(snapshot.products.length!==8)throw Error('Missing fruit catalog');
 const sales=snapshot.products.map(x=>x.sales);const order=await page.locator('.live-sales').allTextContents();if(order.some((v,i)=>i&&Number(v)>Number(order[i-1])))throw Error('Sales sorting failed');
 await page.goto(base+'/?section=season#products');await shot('02-seasonal');
