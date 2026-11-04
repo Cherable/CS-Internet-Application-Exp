@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import F
 
-from .models import CartItem, Order, OrderItem, Product, ShipmentEmail
+from .models import CartItem, Order, OrderItem, Product, ShipmentEmail, Reservation
 
 
 class OrderError(ValueError):
@@ -26,13 +26,19 @@ def checkout(user, token, recipient, email, address):
         raise OrderError("购物车为空。")
     products = {p.pk: p for p in Product.objects.select_for_update().filter(
         pk__in=[item.product_id for item in items]).order_by("pk")}
+    reservations = {}
     prices = {}
     total = Decimal("0.00")
     for item in items:
         product = products[item.product_id]
+        if product.is_upcoming: raise OrderError("预约商品尚未上架。")
         if not product.is_active or product.stock < item.quantity or (product.best_before and product.best_before < timezone.localdate()):
             raise OrderError(f"{product.name} 已下架或库存不足，请调整购物车。")
-        prices[product.pk] = product.current_price
+        reservation=Reservation.objects.select_for_update().filter(user=user,product=product,order__isnull=True).first()
+        if reservation and item.quantity > reservation.quantity:
+            raise OrderError("该商品超过预约数量，请调整数量后使用预约优惠。")
+        if reservation: reservations[product.pk]=reservation
+        prices[product.pk] = min(product.current_price,reservation.price) if reservation else product.current_price
         total += prices[product.pk] * item.quantity
     order = Order.objects.create(user=user, checkout_token=token, recipient=recipient,
                                  email=email, address=address, total=total)
@@ -44,6 +50,9 @@ def checkout(user, token, recipient, email, address):
             raise OrderError("库存发生变化，请重试。")
         OrderItem.objects.create(order=order, product=product, name=product.name,
                                  price=prices[product.pk], quantity=item.quantity)
+    for reservation in reservations.values():
+        reservation.order=order
+        reservation.save(update_fields=["order"])
     CartItem.objects.filter(pk__in=[item.pk for item in items]).delete()
     return order
 
@@ -78,6 +87,7 @@ def cancel(user, order_id):
         pk__in=[item.product_id for item in items]).order_by("pk"))
     for item in items:
         Product.objects.filter(pk=item.product_id).update(stock=F("stock") + item.quantity)
+    Reservation.objects.filter(order=order).update(order=None)
     order.status = Order.Status.CANCELLED
     order.save(update_fields=["status"])
     return order

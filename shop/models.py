@@ -34,6 +34,22 @@ class Product(models.Model):
     sale_kind = models.CharField("销售类型", max_length=12, default="regular", choices=[("regular", "常规"), ("ready", "即食"), ("clearance", "临期")])
     best_before = models.DateField("建议食用截止日期", null=True, blank=True)
 
+    available_on = models.DateField("预计上架日期", null=True, blank=True)
+    overseas = models.BooleanField("海外水果", default=False)
+    source_currency = models.CharField("参考外币", max_length=3, default="CNY")
+    dispatch_hours = models.PositiveIntegerField("平均备货小时（估计）", default=24)
+    transit_hours = models.PositiveIntegerField("平均运输小时（估计）", default=48)
+    tasting_days = models.PositiveIntegerField("送达后赏味天数（估计）", default=3)
+
+    @property
+    def is_upcoming(self):
+        from django.utils import timezone
+        return bool(self.available_on and self.available_on > timezone.localdate())
+
+    @property
+    def delivery_days(self):
+        return round((self.dispatch_hours + self.transit_hours) / 24, 1)
+
     @property
     def current_price(self):
         if not self.fruit_key:
@@ -69,8 +85,15 @@ class CartItem(models.Model):
         ]
 
     @property
+    def unit_price(self):
+        reservation=Reservation.objects.filter(user_id=self.user_id,product_id=self.product_id,order__isnull=True).first()
+        if reservation and not self.product.is_upcoming and self.quantity<=reservation.quantity:
+            return min(self.product.current_price,reservation.price)
+        return self.product.current_price
+
+    @property
     def subtotal(self):
-        return self.product.current_price * self.quantity
+        return self.unit_price * self.quantity
 
 
 class Order(models.Model):
@@ -150,3 +173,25 @@ class FruitDay(models.Model):
         ordering = ["-day", "product_id"]
         verbose_name = "水果每日数据"
         verbose_name_plural = verbose_name
+
+
+class Reservation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount = models.DecimalField(max_digits=5, decimal_places=2)
+    available_on = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.PROTECT, null=True, blank=True)
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "product"], name="unique_user_fruit_reservation"), models.CheckConstraint(condition=models.Q(quantity__gte=1), name="reservation_positive_quantity")]
+
+
+class ExchangeSnapshot(models.Model):
+    key = models.CharField(max_length=20, primary_key=True, default="ecb")
+    rates = models.JSONField(default=dict)
+    published_on = models.DateField(null=True)
+    fetched_at = models.DateTimeField(null=True)
+    attempted_at = models.DateTimeField(null=True)
+    failed = models.BooleanField(default=False)

@@ -72,3 +72,11 @@ class FruitDayAdmin(admin.ModelAdmin):
     readonly_fields = ["product", "day", "simulated_units", "supply", "discount"]
     def has_add_permission(self, request): return False
     def has_delete_permission(self, request, obj=None): return False
+
+from .models import Reservation
+@admin.register(Reservation)
+class ReservationAdmin(admin.ModelAdmin):
+    list_display=["user","product","quantity","price","available_on","order"]
+    readonly_fields=[f.name for f in Reservation._meta.fields]
+    def has_add_permission(self,request): return False
+    def has_delete_permission(self,request,obj=None): return False

@@ -10,6 +10,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 from .fruit_market import decorate
+from .commerce_info import decorate_commerce, reserve, fx_payload
+from .models import Reservation
 from django.db.models import Sum, Count, F
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -46,13 +48,17 @@ def catalog(request):
     section = request.GET.get("section", "all")
     today = timezone.localdate()
     products = [p for p in products if not p.best_before or p.best_before >= today]
-    if section == "season": products = [p for p in products if getattr(p, "is_season", False)]
+    if section == "upcoming": products = [p for p in products if p.is_upcoming]
+    elif section == "overseas": products = [p for p in products if p.overseas and not p.is_upcoming]
+    elif section == "season": products = [p for p in products if getattr(p, "is_season", False)]
     elif section == "offers": products = [p for p in products if p.sale_kind in ("ready", "clearance")]
+    if section != "upcoming": products = [p for p in products if not p.is_upcoming]
+    products = [decorate_commerce(p) for p in products]
     sort = request.GET.get("sort", "sales")
     if sort == "price": products.sort(key=lambda p: p.current_price)
     elif sort == "new": products.sort(key=lambda p: p.created_at, reverse=True)
     else: products.sort(key=lambda p: (-getattr(p, "month_sales", 0), p.pk))
-    hidden_products = [p for p in products if p.fruit_key and (p.stock == 0 or not p.is_season)]
+    hidden_products = [p for p in products if p.fruit_key and not p.is_upcoming and (p.stock == 0 or not p.is_season)]
     visible_products = [p for p in products if p not in hidden_products]
     page = Paginator(visible_products, 12).get_page(request.GET.get("page"))
     return render(request, "shop/catalog.html", {
@@ -66,8 +72,9 @@ def product_detail(request, pk):
         from django.http import Http404
         raise Http404
     if product.fruit_key: decorate(product)
+    decorate_commerce(product)
     from .fruit_stories import story_for
-    return render(request, "shop/detail.html", {"product": product, "story": story_for(product)})
+    return render(request, "shop/detail.html", {"product": product, "story": story_for(product), "reservation": Reservation.objects.filter(user=request.user,product=product).first() if request.user.is_authenticated else None})
 
 
 @login_required
@@ -91,6 +98,9 @@ def add_to_cart(request, pk):
         get_user_model().objects.select_for_update().get(pk=request.user.pk)
         product = get_object_or_404(Product.objects.select_for_update(), pk=pk, is_active=True)
         item = CartItem.objects.filter(user=request.user, product=product).first()
+        if product.is_upcoming:
+            messages.error(request, "预约商品上架后才可加入购物车。")
+            return redirect("product_detail", pk=pk)
         if product.best_before and product.best_before < timezone.localdate():
             messages.error(request, "该批次已结束销售。")
             return redirect("catalog")
@@ -235,7 +245,31 @@ def fruit_snapshot(request):
     for p in Product.objects.filter(is_active=True).exclude(fruit_key=""):
         if p.best_before and p.best_before < today: continue
         decorate(p, today)
-        rows.append({"id":p.pk,"sales":p.month_sales,"price":str(p.today_price),"discount":p.discount_percent,"dormant":p.stock==0 or not p.is_season,"stock":p.stock})
+        decorate_commerce(p)
+        rows.append({"id":p.pk,"sales":p.month_sales,"price":str(p.today_price),"discount":p.discount_percent,"dormant":not p.is_upcoming and (p.stock==0 or not p.is_season),"stock":p.stock,"upcoming":p.is_upcoming})
     response = JsonResponse({"day":str(today),"products":rows})
     response["Cache-Control"] = "no-store"
     return response
+
+
+@login_required
+@require_POST
+def reserve_product(request, pk):
+    get_object_or_404(Product,pk=pk,is_active=True)
+    form=QuantityForm(request.POST)
+    if form.is_valid():
+        try:
+            reserve(request.user,pk,form.cleaned_data['quantity'])
+            messages.success(request,"预约成功，已锁定预约价；无需定金，上架后下单兑现。")
+        except ValueError as exc: messages.error(request,str(exc))
+    else: messages.error(request,"预约数量须为1至999。")
+    return redirect("product_detail",pk=pk)
+
+@login_required
+def reservations(request):
+    rows=Reservation.objects.filter(user=request.user).select_related('product').order_by('-created_at')
+    return render(request,'shop/reservations.html',{'reservations':rows})
+
+def exchange_rates(request):
+    from django.http import JsonResponse
+    response=JsonResponse(fx_payload(refresh=True));response['Cache-Control']='no-store';return response

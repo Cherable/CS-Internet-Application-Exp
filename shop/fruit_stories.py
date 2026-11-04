@@ -40,7 +40,7 @@ STORIES = {
 
 
 def story_for(product):
-    return STORIES.get(product.fruit_key, {"title": product.name, "taste": product.description,
+    return STORIES.get(product.fruit_key.removesuffix("-preview").removesuffix("-overseas"), {"title": product.name, "taste": product.description,
         "serve": "食用和保存方式以实际批次标签为准。", "steps": []})
 
 # New fruit profiles reuse their own origin text and expose an editorial handling journey.

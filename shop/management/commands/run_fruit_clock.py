@@ -10,5 +10,6 @@ class Command(BaseCommand):
             today = timezone.localdate()
             if today != last:
                 call_command("update_fruit_market")
+                call_command("sync_exchange_rates")
                 last = today
             time.sleep(30)
