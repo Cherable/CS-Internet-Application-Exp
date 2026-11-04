@@ -105,6 +105,8 @@ class Order(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     checkout_token = models.UUIDField(unique=True, editable=False)
+    simulated_dispatch_hours = models.PositiveIntegerField(default=24)
+    simulated_transit_hours = models.PositiveIntegerField(default=48)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     recipient = models.CharField("收件人", max_length=80)
     email = models.EmailField("发货通知邮箱")
@@ -195,3 +197,29 @@ class ExchangeSnapshot(models.Model):
     fetched_at = models.DateTimeField(null=True)
     attempted_at = models.DateTimeField(null=True)
     failed = models.BooleanField(default=False)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
+    display_name = models.CharField(max_length=60, blank=True)
+    default_recipient = models.CharField(max_length=80, blank=True)
+    default_address = models.CharField(max_length=300, blank=True)
+    phone = models.CharField(max_length=16, null=True, blank=True, unique=True)
+    phone_verified = models.BooleanField(default=False)
+    phone_demo = models.BooleanField(default=False)
+
+class PhoneChallenge(models.Model):
+    session_key = models.CharField(max_length=40)
+    phone = models.CharField(max_length=16)
+    code_hash = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    attempts = models.PositiveIntegerField(default=0)
+    consumed = models.BooleanField(default=False)
+    demo = models.BooleanField(default=False)
+
+class VerificationThrottle(models.Model):
+    key = models.CharField(max_length=64, primary_key=True)
+    window_started = models.DateTimeField()
+    last_sent = models.DateTimeField(null=True)
+    count = models.PositiveIntegerField(default=0)

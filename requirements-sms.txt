@@ -1,0 +1,2 @@
+-r requirements.txt
+alibabacloud_dysmsapi20170525==4.6.0

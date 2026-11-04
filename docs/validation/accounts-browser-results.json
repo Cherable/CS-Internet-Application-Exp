@@ -1,0 +1,58 @@
+{
+  "layouts": [
+    {
+      "width": 887,
+      "language": "zh-hans",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 887,
+      "language": "zh-hant",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 887,
+      "language": "en",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 390,
+      "language": "zh-hans",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 390,
+      "language": "zh-hant",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 390,
+      "language": "en",
+      "profile": true,
+      "tracking": true,
+      "story": true,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "errors": [],
+  "untranslated": [],
+  "registration": true,
+  "optionalPhoneDemo": true,
+  "profileDefaults": true,
+  "paidOrderTracking": true
+}

@@ -1,3 +1,3 @@
-{% extends 'base.html' %}
-{% block title %}注册 · orangible{% endblock %}
-{% block content %}<section class="auth-card"><p class="eyebrow">A FRESH START</p><h1>开启 orangible 日常</h1><p class="muted">创建账户，收藏生活里的小小期待。</p><form method="post">{% csrf_token %}{{ form.as_p }}<button>创建账户</button></form><p>已有账户？<a href="{% url 'login' %}">去登录</a></p></section>{% endblock %}
+{% extends 'base.html' %}{% load shop_i18n %}
+{% block title %}{% tr "注册 · orangible" %}{% endblock %}
+{% block content %}<section class="auth-card"><p class="eyebrow">A FRESH START</p><h1>{% tr "开启 orangible 日常" %}</h1><p class="muted">{% tr "创建账户，收藏生活里的小小期待。" %}</p><p class="phone-note">{% tr "手机号绑定可选；绑定时需要短信验证码。目前支持中国大陆手机号（+86）。不绑定仍可注册。" %}</p>{% if sms_demo %}<p class="demo-badge">{% tr "本机短信演示：不发送真实短信，演示绑定不代表手机号已验证。" %}</p>{% endif %}<form method="post" class="account-form">{% csrf_token %}{% include 'shop/_form.html' %}<button>{% tr "创建账户" %}</button></form><p>{% tr "已有账户？" %}<a href="{% url 'login' %}">{% tr "去登录" %}</a></p></section>{% endblock %}

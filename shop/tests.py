@@ -21,7 +21,10 @@ class ShopTests(TestCase):
         self.client.force_login(self.user)
 
     def test_registration_hashes_password_and_logs_in(self):
-        response = self.client.post(reverse("register"), {"username": "charlie", "email": "c@example.com", "password1": "Good-study-2026!", "password2": "Good-study-2026!"})
+        session=self.client.session
+        from .verification import new_captcha
+        code=new_captcha(session);session.save()
+        response = self.client.post(reverse("register"), {"captcha":code,"username": "charlie", "email": "c@example.com", "password1": "Good-study-2026!", "password2": "Good-study-2026!"})
         self.assertRedirects(response, reverse("catalog"))
         user = User.objects.get(username="charlie")
         self.assertTrue(user.check_password("Good-study-2026!"))

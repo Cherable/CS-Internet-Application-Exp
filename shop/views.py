@@ -24,13 +24,28 @@ from django.core.exceptions import PermissionDenied
 
 
 def register(request):
+    from .verification import check_captcha,validate_phone
+    from .models import UserProfile
+    from django.db import IntegrityError
     form = RegistrationForm(request.POST if request.method == "POST" else None)
-    if request.method == "POST" and form.is_valid():
-        user = form.save()
-        login(request, user)
-        messages.success(request, "注册成功，欢迎来到 orangible。")
-        return redirect("catalog")
-    return render(request, "registration/register.html", {"form": form})
+    if request.method == "POST":
+        valid=form.is_valid()
+        if not check_captcha(request.session, request.POST.get('captcha'), consume=True):
+            form.add_error('captcha','图片验证码不正确或已过期。');valid=False
+        phone=form.cleaned_data.get('phone')
+        if valid and phone:
+            try: validate_phone(request.session,phone,form.cleaned_data.get('sms_code',''))
+            except ValueError as exc: form.add_error('sms_code',str(exc));valid=False
+        if valid:
+            try:
+                with transaction.atomic():
+                    demo=validate_phone(request.session,phone,form.cleaned_data['sms_code'],consume=True) if phone else False
+                    user=form.save()
+                    UserProfile.objects.create(user=user,phone=phone or None,phone_verified=bool(phone and not demo),phone_demo=demo)
+            except (IntegrityError,ValueError):form.add_error('phone','手机号已被使用或验证码失效。')
+            else:
+                login(request,user);messages.success(request,"注册成功，欢迎来到 orangible。");return redirect("catalog")
+    return render(request,"registration/register.html",{"form":form,"sms_demo":settings.DEBUG and settings.SMS_BACKEND=='demo'})
 
 
 def catalog(request):
@@ -38,7 +53,11 @@ def catalog(request):
     query = request.GET.get("q", "").strip()[:120]
     category = request.GET.get("category", "")
     if query:
-        products = products.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(origin__icontains=query) | Q(flavor__icontains=query))
+        from opencc import OpenCC
+        from .translations import EN
+        search_query=OpenCC('t2s').convert(query)
+        matching_names=[source for source,target in EN.items() if query.lower() in target.lower() and len(source)<120]
+        products = products.filter(Q(name__in=matching_names) | Q(origin__in=matching_names) | Q(flavor__in=matching_names) | Q(description__in=matching_names) | Q(name__icontains=search_query) | Q(description__icontains=search_query) | Q(origin__icontains=search_query) | Q(flavor__icontains=search_query))
     if category:
         if category.isascii() and category.isdigit() and len(category) < 10:
             products = products.filter(category_id=int(category))
@@ -154,7 +173,10 @@ def checkout(request):
     if request.method == "GET":
         token = str(uuid.uuid4())
         request.session["checkout_tokens"] = (request.session.get("checkout_tokens", []) + [token])[-8:]
-        form = CheckoutForm(initial={"token": token, "email": request.user.email})
+        from .models import UserProfile
+        profile=UserProfile.objects.filter(user=request.user).first()
+        form = CheckoutForm(initial={"token": token, "email": request.user.email,
+            "recipient":profile.default_recipient if profile else "", "address":profile.default_address if profile else ""})
     else:
         form = CheckoutForm(request.POST)
         if form.is_valid():
@@ -175,13 +197,16 @@ def checkout(request):
 @login_required
 def order_list(request):
     page = Paginator(Order.objects.filter(user=request.user), 10).get_page(request.GET.get("page"))
+    from .tracking import tracking_for
+    for order in page: order.tracking = tracking_for(order)
     return render(request, "shop/orders.html", {"page": page})
 
 
 @login_required
 def order_detail(request, pk):
+    from .tracking import tracking_for
     order = get_object_or_404(Order.objects.prefetch_related("items"), pk=pk, user=request.user)
-    return render(request, "shop/order_detail.html", {"order": order, "demo_enabled": settings.DEMO_PAYMENT_ENABLED})
+    return render(request, "shop/order_detail.html", {"order": order, "demo_enabled": settings.DEMO_PAYMENT_ENABLED, "tracking": tracking_for(order)})
 
 
 @login_required
@@ -273,3 +298,12 @@ def reservations(request):
 def exchange_rates(request):
     from django.http import JsonResponse
     response=JsonResponse(fx_payload(refresh=True));response['Cache-Control']='no-store';return response
+
+
+@login_required
+def order_tracking(request, pk):
+    from .tracking import tracking_for
+    order=get_object_or_404(Order,pk=pk,user=request.user)
+    response=render(request,'shop/_tracking.html',{'order':order,'tracking':tracking_for(order)})
+    response['Cache-Control']='private, no-store'
+    return response

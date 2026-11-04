@@ -1,0 +1,57 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+Found 14 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, sessions, shop
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+  Applying shop.0001_initial... OK
+  Applying shop.0002_order_orderitem_shipmentemail_and_more... OK
+  Applying shop.0003_product_best_before_product_flavor_product_fruit_key_and_more... OK
+  Applying shop.0004_exchangesnapshot_product_available_on_and_more... OK
+test_code_is_scoped_to_session_and_expiry (shop.test_accounts.AccountFeaturesTests.test_code_is_scoped_to_session_and_expiry) ... ok
+test_code_wrong_attempts_persist_and_lock (shop.test_accounts.AccountFeaturesTests.test_code_wrong_attempts_persist_and_lock) ... ok
+test_demo_phone_binding_is_never_verified (shop.test_accounts.AccountFeaturesTests.test_demo_phone_binding_is_never_verified) ... ok
+test_expired_captcha_rejected (shop.test_accounts.AccountFeaturesTests.test_expired_captcha_rejected) ... ok
+test_language_cookie_search_and_user_input_preserved (shop.test_accounts.AccountFeaturesTests.test_language_cookie_search_and_user_input_preserved) ... ok
+test_optional_phone_registration_without_binding (shop.test_accounts.AccountFeaturesTests.test_optional_phone_registration_without_binding) ... ok
+test_production_never_exposes_demo_code (shop.test_accounts.AccountFeaturesTests.test_production_never_exposes_demo_code) ... ok
+test_profile_ownership_password_and_defaults (shop.test_accounts.AccountFeaturesTests.test_profile_ownership_password_and_defaults) ... ok
+test_profile_rebinding_and_unbinding_requires_password (shop.test_accounts.AccountFeaturesTests.test_profile_rebinding_and_unbinding_requires_password) ... ok
+test_provider_adapter_never_returns_real_code (shop.test_accounts.AccountFeaturesTests.test_provider_adapter_never_returns_real_code) ... ok
+test_registration_requires_captcha_and_rejects_replay (shop.test_accounts.AccountFeaturesTests.test_registration_requires_captcha_and_rejects_replay) ... ok
+test_sms_cooldown_and_captcha_guard (shop.test_accounts.AccountFeaturesTests.test_sms_cooldown_and_captcha_guard) ... Bad Request: /accounts/phone-code/
+ok
+test_tracking_first_day_transit_and_arrival (shop.test_accounts.AccountFeaturesTests.test_tracking_first_day_transit_and_arrival) ... ok
+test_tracking_is_private_and_unpaid_has_no_events (shop.test_accounts.AccountFeaturesTests.test_tracking_is_private_and_unpaid_has_no_events) ... Not Found: /orders/1ba69316-69a9-41ef-994b-e48671ccbc36/tracking/
+ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 6.808s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+  Applying shop.0005_phonechallenge_verificationthrottle_and_more... OK
+System check identified no issues (0 silenced).

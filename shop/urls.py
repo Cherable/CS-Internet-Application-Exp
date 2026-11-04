@@ -1,7 +1,11 @@
 from django.urls import path
-from . import views
+from . import views, account_views
 
 urlpatterns = [
+    path("orders/<uuid:pk>/tracking/", views.order_tracking, name="order_tracking"),
+    path("accounts/profile/", account_views.profile, name="profile"),
+    path("accounts/captcha.svg", account_views.captcha, name="captcha"),
+    path("accounts/phone-code/", account_views.send_code, name="send_phone_code"),
     path("exchange-rates/", views.exchange_rates, name="exchange_rates"),
     path("reservations/", views.reservations, name="reservations"),
     path("products/<int:pk>/reserve/", views.reserve_product, name="reserve_product"),

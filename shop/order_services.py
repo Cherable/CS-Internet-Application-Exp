@@ -41,7 +41,9 @@ def checkout(user, token, recipient, email, address):
         prices[product.pk] = min(product.current_price,reservation.price) if reservation else product.current_price
         total += prices[product.pk] * item.quantity
     order = Order.objects.create(user=user, checkout_token=token, recipient=recipient,
-                                 email=email, address=address, total=total)
+                                 email=email, address=address, total=total,
+                                 simulated_dispatch_hours=max(p.dispatch_hours for p in products.values()),
+                                 simulated_transit_hours=max(p.transit_hours for p in products.values()))
     for item in items:
         product = products[item.product_id]
         # Conditional UPDATE is an additional oversell guard, including SQLite preview.

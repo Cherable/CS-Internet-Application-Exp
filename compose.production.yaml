@@ -14,7 +14,10 @@ services:
       timeout: 5s
       retries: 30
   web:
-    build: .
+    build:
+      context: .
+      args:
+        ENABLE_ALIYUN_SMS: ${ENABLE_ALIYUN_SMS:-false}
     restart: unless-stopped
     env_file: .env.production
     environment:
@@ -25,7 +28,10 @@ services:
       db: {condition: service_healthy}
     volumes: ["static_data:/app/staticfiles"]
   fruit-clock:
-    build: .
+    build:
+      context: .
+      args:
+        ENABLE_ALIYUN_SMS: ${ENABLE_ALIYUN_SMS:-false}
     restart: unless-stopped
     env_file: .env.production
     environment:

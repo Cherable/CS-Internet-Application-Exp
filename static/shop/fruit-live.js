@@ -1,7 +1,7 @@
-(()=>{
+(()=>{const t=s=>window.orangibleTranslate?window.orangibleTranslate(s):s;
  const grid=document.getElementById('fruit-grid');if(!grid)return;
  const more=document.getElementById('load-more-fruits'), hidden=document.getElementById('hidden-fruit-grid');
- if(more&&hidden){more.addEventListener('click',()=>{const open=more.getAttribute('aria-expanded')==='true';hidden.hidden=open;more.setAttribute('aria-expanded',String(!open));more.textContent=open?'加载更多（'+hidden.children.length+'） ↓':'收起商品 ↑';});}
+ if(more&&hidden){more.addEventListener('click',()=>{const open=more.getAttribute('aria-expanded')==='true';hidden.hidden=open;more.setAttribute('aria-expanded',String(!open));more.textContent=open?t('加载更多（')+hidden.children.length+'） ↓':t('收起商品 ↑');});}
  async function refresh(){if(document.hidden)return;try{
  const response=await fetch('/fruit-market/',{cache:'no-store'});if(!response.ok)return;
  const data=await response.json();if(grid.dataset.day!==data.day){location.reload();return;}
