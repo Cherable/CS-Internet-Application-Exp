@@ -25,3 +25,11 @@
 - starfruit.jpg — Jahra Tasfia Reza — https://www.pexels.com/photo/40000500/
 
 - lychee.jpg — greenwish _ — https://www.pexels.com/photo/14532763/
+
+## 果园手记摄影
+
+以下图片为题材摄影，非本商品供应商、产地或人物背书；照片人物未被赋予虚构姓名或供货关系。已下载到本地静态目录，长边不超过2400px，页面不依赖外链图片。适用[Pexels许可](https://www.pexels.com/license/)。
+
+- field-guava.jpg — Prasa Creation — https://www.pexels.com/photo/close-up-of-green-guava-on-tree-branch-35140276/
+- field-mango-harvest.jpg — pedro furtado — https://www.pexels.com/photo/farmer-harvesting-ripe-mangoes-in-orchard-31095039/
+- field-banana.jpg — Fernanda Luna — https://www.pexels.com/photo/photo-of-a-banana-plantation-15408866/

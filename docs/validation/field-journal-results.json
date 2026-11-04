@@ -1,0 +1,33 @@
+{
+  "layouts": [
+    {
+      "width": 887,
+      "gridWidth": 807,
+      "cardWidth": 807,
+      "fullWidth": true,
+      "scenes": 2,
+      "fieldPhotoLoaded": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 1440,
+      "gridWidth": 1220,
+      "cardWidth": 600.984375,
+      "fullWidth": false,
+      "scenes": 2,
+      "fieldPhotoLoaded": true,
+      "noHorizontalOverflow": true
+    },
+    {
+      "width": 390,
+      "gridWidth": 338,
+      "cardWidth": 337.984375,
+      "fullWidth": true,
+      "scenes": 2,
+      "fieldPhotoLoaded": true,
+      "noHorizontalOverflow": true
+    }
+  ],
+  "scenePages": 20,
+  "photoPages": 6
+}

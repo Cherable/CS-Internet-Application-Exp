@@ -40,8 +40,18 @@ STORIES = {
 
 
 def story_for(product):
-    return STORIES.get(product.fruit_key.removesuffix("-preview").removesuffix("-overseas"), {"title": product.name, "taste": product.description,
-        "serve": "食用和保存方式以实际批次标签为准。", "steps": []})
+    from .field_notes import FIELD_NOTES, FIELD_PHOTOS
+    key = product.fruit_key.removesuffix("-preview").removesuffix("-overseas")
+    story = dict(STORIES.get(key, {"title": product.name, "taste": product.description,
+        "serve": "食用和保存方式以实际批次标签为准。", "steps": []}))
+    if key in FIELD_NOTES:
+        title, growing, harvest = FIELD_NOTES[key]
+        story["field"] = {"title": title, "growing": growing, "harvest": harvest}
+    if key in FIELD_PHOTOS:
+        image, caption, author, url = FIELD_PHOTOS[key]
+        story["field_photo"] = {"image": image, "caption": caption, "author": author, "url": url}
+    return story
+
 
 # New fruit profiles reuse their own origin text and expose an editorial handling journey.
 from .extra_fruits import EXTRA_FRUITS
