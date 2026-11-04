@@ -21,7 +21,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--mysqld", default=shutil.which("mysqld"))
     parser.add_argument("--port", type=int, default=13316)
-    parser.add_argument("--evidence", default="docs/stages/stage-02/mysql-test-results.txt")
+    parser.add_argument("--evidence", default="docs/validation/mysql-test-results.txt")
     args = parser.parse_args()
     if not args.mysqld:
         parser.error("Provide --mysqld with the installed MySQL server executable")

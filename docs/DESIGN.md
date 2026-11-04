@@ -16,4 +16,4 @@
 
 ## 验证
 
-SQLite 回归及 MySQL 8.0.45 独立实例测试结果分别见 test-results.txt 和 mysql-test-results.txt。新增测试覆盖日数据幂等、滚动窗口、即时补录/付款、优惠价格快照、过期批次、筛选排序和权限。浏览器验收及截图独立保存；原阶段证据保留。Docker/Compose 云上运行仍待实际 ECS 验证。
+SQLite 回归及 MySQL 8.0.45 独立实例测试结果分别见 validation/test-results.txt 和 validation/mysql-test-results.txt。新增测试覆盖日数据幂等、滚动窗口、即时补录/付款、优惠价格快照、过期批次、筛选排序和权限。浏览器验收及截图独立保存；Docker/Compose 云上运行仍待实际 ECS 验证。

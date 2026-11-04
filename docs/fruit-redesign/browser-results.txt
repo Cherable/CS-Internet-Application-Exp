@@ -1,1 +1,0 @@
-PASS: 8 fruit products, monthly-sales default ordering, season/offers filters, search, real loaded local photos, clean detail, registration, discounted checkout/order snapshot, demo payment, mobile 390px without overflow. 7 screenshots. No page errors.

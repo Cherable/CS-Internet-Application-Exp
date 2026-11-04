@@ -1,1 +1,0 @@
-PASS: 8 active products have individualized tasting and four-stage journey copy; search placeholder excludes flavor; desktop/mobile verified separately by layout-v2.
