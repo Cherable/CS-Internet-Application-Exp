@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from shop.models import Category, Product
 from shop.fruit_market import ensure_day
+from shop.extra_fruits import EXTRA_FRUITS
 class Command(BaseCommand):
     help="Seed tropical fruit catalog; retire old goods without deleting orders"
     def handle(self,*args,**options):
@@ -18,5 +19,8 @@ class Command(BaseCommand):
         for key,kind in [("papaya","ready"),("mango","clearance")]:
             base=Product.objects.get(fruit_key=key,sale_kind="regular")
             p,_=Product.objects.get_or_create(fruit_key=key,sale_kind=kind,defaults=dict(category=category,name=base.name+(" · 即食熟度" if kind=="ready" else " · 临期分享"),price=base.price,stock=32,origin=base.origin,flavor=base.flavor,growing_story=base.growing_story,season_months=base.season_months,image_name=base.image_name,description="成熟批次，建议收到后尽快食用",best_before=timezone.localdate()+timedelta(days=2 if kind=="clearance" else 4)))
+            ensure_day(p)
+        for key,name,price,origin,flavor,story,months,stock in EXTRA_FRUITS:
+            p,_=Product.objects.get_or_create(fruit_key=key,sale_kind="regular",defaults=dict(category=category,name=name,price=price,stock=stock,origin=origin,flavor=flavor,growing_story=story,season_months=months,image_name=key+".jpg",description=flavor+" · 热带果园精选"))
             ensure_day(p)
         self.stdout.write("Fruit catalog ready; existing fruit records preserved")

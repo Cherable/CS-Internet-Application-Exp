@@ -14,3 +14,14 @@
 - pineapple-full.jpg — Kaboompics — https://www.pexels.com/photo/fresh-whole-pineapple-on-white-background-4195510/
 
 - pineapple-whole.jpg — Kaboompics — https://www.pexels.com/photo/whole-pineapple-on-white-marble-surface-4195527/
+
+- durian.jpg — Jeffry Surianto — https://www.pexels.com/photo/11493641/
+- mangosteen.jpg — Anna Tukhfatullina — https://www.pexels.com/photo/2568457/
+- rambutan.jpg — hartono subagio — https://www.pexels.com/photo/35205603/
+- guava.jpg — Bảo Minh — https://www.pexels.com/photo/31333435/
+- banana.jpg — Alexas Fotos — https://www.pexels.com/photo/7472115/
+- avocado.jpg — Feyza Yıldırım — https://www.pexels.com/photo/18391343/
+
+- starfruit.jpg — Jahra Tasfia Reza — https://www.pexels.com/photo/40000500/
+
+- lychee.jpg — greenwish _ — https://www.pexels.com/photo/14532763/

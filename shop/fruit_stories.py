@@ -42,3 +42,13 @@ STORIES = {
 def story_for(product):
     return STORIES.get(product.fruit_key, {"title": product.name, "taste": product.description,
         "serve": "食用和保存方式以实际批次标签为准。", "steps": []})
+
+# New fruit profiles reuse their own origin text and expose an editorial handling journey.
+from .extra_fruits import EXTRA_FRUITS
+for key,name,price,origin,flavor,growing,months,stock in EXTRA_FRUITS:
+    STORIES[key] = {
+        "title": name.split(" · ")[0] + "，等待合适的一口。",
+        "taste": flavor.replace(" / ", "、") + "，构成这颗热带果实的风味轮廓。不同品种与成熟度会带来口感差异，适合按自己的喜好选择食用时机。",
+        "serve": "建议收到后检查完整度和熟度，食用及保存条件以实际商品标签为准；缺货商品仅作图鉴展示。",
+        "steps": [("采摘 · 选择批次", growing), ("分选 · 检查状态", "按规格、外观和成熟度分选，排除异常破损果实，保留批次信息。"), ("运输 · 保护果实", "按果实特点配置缓冲与通风包装，降低搬运摩擦，温控和运输方式以实际批次为准。"), ("上架 · 清楚展示", "到货检查后记录库存和状态；过季或缺货时转入灰色图鉴，保留产品资料。")]
+    }

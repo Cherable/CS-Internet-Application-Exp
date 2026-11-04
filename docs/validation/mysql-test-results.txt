@@ -1,5 +1,5 @@
 Disposable local MySQL 8.0.45; loopback only; no existing service used.
-Found 46 test(s).
+Found 50 test(s).
 Operations to perform:
   Synchronize unmigrated apps: messages, staticfiles
   Apply all migrations: admin, auth, contenttypes, sessions, shop
@@ -38,6 +38,10 @@ test_manual_input_and_payment_are_immediate_without_double_count (shop.test_frui
 test_next_day_continues_and_rolling_window_moves (shop.test_fruit_market.FruitMarketTests.test_next_day_continues_and_rolling_window_moves) ... ok
 test_quote_matches_order_snapshot (shop.test_fruit_market.FruitMarketTests.test_quote_matches_order_snapshot) ... ok
 test_snapshot_and_manual_admin_permissions (shop.test_fruit_market.FruitMarketTests.test_snapshot_and_manual_admin_permissions) ... ok
+test_out_of_stock_detail_and_direct_add (shop.test_hidden_fruits.HiddenFruitTests.test_out_of_stock_detail_and_direct_add) ... ok
+test_search_keeps_unavailable_results_in_reveal_area (shop.test_hidden_fruits.HiddenFruitTests.test_search_keeps_unavailable_results_in_reveal_area) ... ok
+test_snapshot_availability_changes_with_stock (shop.test_hidden_fruits.HiddenFruitTests.test_snapshot_availability_changes_with_stock) ... ok
+test_split_and_collapsed_markup (shop.test_hidden_fruits.HiddenFruitTests.test_split_and_collapsed_markup) ... ok
 test_admin_order_has_no_manual_status_or_delete (shop.test_orders.OrderTests.test_admin_order_has_no_manual_status_or_delete) ... ok
 test_cancel_restores_inventory_once_and_blocks_payment (shop.test_orders.OrderTests.test_cancel_restores_inventory_once_and_blocks_payment) ... ok
 test_checkout_all_or_nothing_for_insufficient_stock (shop.test_orders.OrderTests.test_checkout_all_or_nothing_for_insufficient_stock) ... ok
@@ -79,7 +83,7 @@ test_parallel_same_checkout_token_reserves_once (shop.test_orders.MySQLConcurren
 test_two_buyers_last_unit_only_one_succeeds (shop.test_orders.MySQLConcurrencyTests.test_two_buyers_last_unit_only_one_succeeds) ... ok
 
 ----------------------------------------------------------------------
-Ran 46 tests in 3.403s
+Ran 50 tests in 3.835s
 
 OK
 Destroying test database for alias 'default' ('test_campus_shop')...

@@ -52,9 +52,11 @@ def catalog(request):
     if sort == "price": products.sort(key=lambda p: p.current_price)
     elif sort == "new": products.sort(key=lambda p: p.created_at, reverse=True)
     else: products.sort(key=lambda p: (-getattr(p, "month_sales", 0), p.pk))
-    page = Paginator(products, 12).get_page(request.GET.get("page"))
+    hidden_products = [p for p in products if p.fruit_key and (p.stock == 0 or not p.is_season)]
+    visible_products = [p for p in products if p not in hidden_products]
+    page = Paginator(visible_products, 12).get_page(request.GET.get("page"))
     return render(request, "shop/catalog.html", {
-        "section": section, "sort": sort, "today": today, "page": page, "categories": Category.objects.all(), "query": query, "selected_category": category,
+        "hidden_products": hidden_products, "total_count": len(products), "section": section, "sort": sort, "today": today, "page": page, "categories": Category.objects.all(), "query": query, "selected_category": category,
     })
 
 
@@ -233,7 +235,7 @@ def fruit_snapshot(request):
     for p in Product.objects.filter(is_active=True).exclude(fruit_key=""):
         if p.best_before and p.best_before < today: continue
         decorate(p, today)
-        rows.append({"id":p.pk,"sales":p.month_sales,"price":str(p.today_price),"discount":p.discount_percent})
+        rows.append({"id":p.pk,"sales":p.month_sales,"price":str(p.today_price),"discount":p.discount_percent,"dormant":p.stock==0 or not p.is_season,"stock":p.stock})
     response = JsonResponse({"day":str(today),"products":rows})
     response["Cache-Control"] = "no-store"
     return response
